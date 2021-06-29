@@ -67,6 +67,20 @@ jobs:
             cache-from: type=local,src=/tmp/.buildx-cache
             cache-to: type=local,dest=/tmp/.buildx-cache
             push: true
+        - name: Build usonic-libteam
+          uses: docker/build-push-action@v2
+          with:
+            context: ./
+            file: ./docker/build-libteam.Dockerfile
+            builder: ${{ steps.buildx.outputs.name }}
+            tags: ghcr.io/microsonic/usonic-libteam:${{ github.sha }}
+            build-args: |
+              USONIC_SWSS_COMMON_IMAGE=ghcr.io/microsonic/usonic-swss-common:${{ github.sha }}
+              USONIC_SAIREDIS_IMAGE=ghcr.io/microsonic/usonic-sairedis:${{ github.sha }}
+              USONIC_SWSS_IMAGE=ghcr.io/microsonic/usonic-swss:${{ github.sha }}
+            cache-from: type=local,src=/tmp/.buildx-cache
+            cache-to: type=local,dest=/tmp/.buildx-cache
+            push: true
         - name: Build run-image
           uses: docker/build-push-action@v2
           with:
